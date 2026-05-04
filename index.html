@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Venom</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <header class="topbar">
+      <div>
+        <span class="eyebrow">Symbiote automata lab</span>
+        <h1>Venom</h1>
+        <p>Build an NFA, then watch it transform into a DFA with cinematic graph energy.</p>
+      </div>
+      <div class="top-actions">
+        <button id="helpBtn" class="ghost" type="button" title="Show help">?</button>
+        <button id="aboutBtn" type="button">About</button>
+      </div>
+    </header>
+
+    <section class="string-tester" aria-label="String acceptance tester">
+      <form id="stringTesterForm">
+        <label for="stringInput">Test string</label>
+        <input id="stringInput" type="text" placeholder="abba or a,b,b,a" autocomplete="off">
+        <button id="checkStringBtn" type="submit">Check Acceptance</button>
+      </form>
+      <div id="stringResult" class="acceptance-result" hidden></div>
+    </section>
+
+    <main class="workspace">
+      <section class="machine-panel">
+        <div class="panel-header">
+          <div>
+            <h2>NFA Web</h2>
+            <p>N = (Q, E, delta, q0, F)</p>
+          </div>
+          <div class="toolbar">
+            <button id="defineBtn" type="button">Define NFA</button>
+            <button id="importBtn" type="button">Import</button>
+            <button id="exportBtn" type="button">Export</button>
+            <button id="clearNfaBtn" class="danger" type="button">Clear NFA</button>
+            <select id="presetSelect" aria-label="Load preset">
+              <option value="">Presets</option>
+              <option value="ends-with-ab">Ends with ab</option>
+              <option value="contains-a">Contains a</option>
+              <option value="epsilon">Epsilon branch</option>
+            </select>
+          </div>
+        </div>
+        <div class="canvas-shell">
+          <canvas id="nfaCanvas" width="860" height="520"></canvas>
+        </div>
+        <div id="nfaInfo" class="machine-info"></div>
+      </section>
+
+      <section class="machine-panel">
+        <div class="panel-header">
+          <div>
+            <h2>DFA Transformation</h2>
+            <p>M = (Q', E, delta', q0', F')</p>
+          </div>
+          <div class="toolbar">
+            <button id="backBtn" type="button">Back</button>
+            <button id="stepBtn" type="button">Step</button>
+            <button id="animateBtn" type="button">Animate</button>
+            <button id="completeBtn" type="button">Complete</button>
+            <button id="clearDfaBtn" class="danger" type="button">Clear DFA</button>
+          </div>
+        </div>
+        <div class="canvas-shell">
+          <canvas id="dfaCanvas" width="860" height="520"></canvas>
+        </div>
+        <div id="dfaInfo" class="machine-info"></div>
+      </section>
+    </main>
+
+    <dialog id="helpDialog">
+      <form method="dialog">
+        <h2>Quick controls</h2>
+        <ul>
+          <li>Right-click empty NFA canvas to add a state.</li>
+          <li>Right-click a state to mark start/final, rename, delete, or create a transition.</li>
+          <li>Drag states to reposition them. Drag empty canvas to pan. Use mouse wheel to zoom.</li>
+          <li>Use Define NFA to type the automaton directly, or load one of the presets.</li>
+          <li>Use epsilon or e for epsilon transitions. Use comma-separated symbols for grouped labels.</li>
+        </ul>
+        <button type="submit">Close</button>
+      </form>
+    </dialog>
+
+    <dialog id="aboutDialog">
+      <form method="dialog">
+        <h2>About Venom</h2>
+        <p><b>VENOM</b> stands for <b>Virtual Engine for NFA to DFA Convertor and Visualiser</b>.</p>
+        <button type="submit">Close</button>
+      </form>
+    </dialog>
+
+    <dialog id="stringDialog" class="define-dialog">
+      <form id="stringForm">
+        <h2>String Acceptance</h2>
+        <label>
+          Input string
+          <input id="stringDialogInput" type="text" placeholder="abba or a,b,b,a" autocomplete="off">
+        </label>
+        <p class="form-hint">Leave it empty to test the empty string. Use comma-separated input for multi-character symbols.</p>
+        <div id="stringDialogResult" class="acceptance-result" hidden></div>
+        <div class="dialog-actions">
+          <button type="submit">Check String</button>
+          <button id="cancelStringBtn" type="button">Close</button>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog id="defineDialog" class="define-dialog">
+      <form id="defineForm" method="dialog">
+        <h2>Define NFA</h2>
+        <div class="form-grid">
+          <label>
+            States
+            <input id="statesInput" type="text" value="q0,q1,q2" autocomplete="off">
+          </label>
+          <label>
+            Alphabet
+            <input id="alphabetInput" type="text" value="a,b" autocomplete="off">
+          </label>
+          <label>
+            Start state
+            <input id="startInput" type="text" value="q0" autocomplete="off">
+          </label>
+          <label>
+            Final states
+            <input id="finalsInput" type="text" value="q2" autocomplete="off">
+          </label>
+        </div>
+        <label>
+          Transitions
+          <textarea id="transitionsInput" spellcheck="false">q0,a,q0
+q0,b,q0
+q0,a,q1
+q1,b,q2</textarea>
+        </label>
+        <p class="form-hint">Use one transition per line: from,symbol,to. Use eps or epsilon for epsilon transitions.</p>
+        <div id="defineError" class="form-error" hidden></div>
+        <div class="dialog-actions">
+          <button id="loadExampleBtn" type="button">Load Example</button>
+          <button type="submit">Apply NFA</button>
+          <button id="cancelDefineBtn" type="button">Cancel</button>
+        </div>
+      </form>
+    </dialog>
+
+    <div id="contextMenu" class="context-menu" hidden></div>
+    <input id="fileInput" type="file" accept="application/json,.json" hidden>
+    <script src="app.js"></script>
+  </body>
+</html>
